@@ -29,7 +29,7 @@ let GSNotificationCenter = {
                     if (fn.scope != scope) {
                         return true;
                     } else {
-                        GS.Log.debug(TAG, 'GSNotificationCenter : remove listener by Scope: ' + msg);
+                        GS.GLOG.debug(TAG, 'GSNotificationCenter : remove listener by Scope: ' + msg);
                         return false;
                     }
                 });
@@ -38,7 +38,7 @@ let GSNotificationCenter = {
     },
 
     trigger: function (eventName, params) {
-        GS.Log.debug(TAG, 'EventTrigger:' + eventName);
+        GS.GLOG.debug(TAG, 'EventTrigger:' + eventName);
         var fns = this.events[eventName];
         if (!fns) {
             return;

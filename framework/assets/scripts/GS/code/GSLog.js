@@ -59,7 +59,24 @@ class Log{
     getLogInfoString(){return JSON.stringify(this.getLogInfoObject());}
 }
 
+let _logFormat = (type, infos)=>{
+    let info = `${type}  ${infos.join(' ')}`;
+    console.log(info);
+};
+let GLOG = {
+    debug:(...infos)=>{
+        _logFormat('DEBUG', infos);
+    },
+    error:(...infos)=>{
+        _logFormat('ERROR', infos);
+    },
+    warn:(...infos)=>{
+        _logFormat('WARN', infos);
+    }
+};
+
 module.exports = {
     create,
-    Log
+    Log,
+    GLOG,
 };

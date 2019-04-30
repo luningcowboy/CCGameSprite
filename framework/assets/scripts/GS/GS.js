@@ -2,7 +2,8 @@ cc.log('load GS');
 window.GS = {};
 GS.Constant = require('./code/GSConstants.js');
 GS.Utils = require('./code/GSUtils.js');
-GS.Log = require('./code/GSLog.js');
+GS.Log = require('./code/GSLog.js'); 
+GS.GLOG = GS.Log.GLOG; // 全局日志
 GS.Http = require('./code/GSHttp.js');
 GS.NotificationCenter = require('./code/GSNotificationCenter.js');
 GS.KVStorage = require('./code/GSKVStorage.js');

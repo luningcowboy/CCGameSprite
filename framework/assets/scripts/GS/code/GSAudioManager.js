@@ -18,6 +18,7 @@ class AudioManager{
         // 读取本地配置 mute
         let mute_str = GS.KVStorage.loadStr(GS.Constants.AUDIO_MUTE_KEY, '0');
         this.isMute = mute_str === '0' ? false : true;
+        this.log = GS.Log.create({TAG: TAG});
     }
     loadRes(){
         let sound_keys = Reflect.ownKeys(this.soundConfig); 
@@ -38,14 +39,14 @@ class AudioManager{
                         is_play_after_load && this.playSound(path);
                     }
                     else{
-                        GS.Log.error(TAG, 'addSoundByPath', path);
+                        this.log.error('addSoundByPath', path);
                     }
                 });
             } else {
                 is_play_after_load && this.playSound(path);
             }
         } catch (e) {
-            GS.Log.error(TAG, 'addSoundByPath', path);
+            this.log.error('addSoundByPath', path);
         }
     }
     addMusicByPath(path, is_play_after_load = false){
@@ -56,14 +57,14 @@ class AudioManager{
                         this.bgMusicCache.set(path, data);
                         is_play_after_load && this.playMusic(path);
                     } else {
-                        GS.Log.error(TAG, 'addMusicByPath', path);
+                        this.log.error('addMusicByPath', path);
                     }
                 });
             } else {
                 is_play && this.playMusic(url);
             }
         } catch (e) {
-            GS.Log.error(TAG, 'addMusicByPath', path);
+            this.log.error('addMusicByPath', path);
         }
     }
     playMusic(path, is_loop = true, volume = 1.0){
