@@ -27,10 +27,11 @@ let create = ({TAG = 'LOG', timeStamp= true, saveLevel = 2, logLevel = 0})=>{
 class Log{
     constructor(config){
         this._config = config;
+        this._showTimeStamp = this._config.timeStamp;
         this._logList = [];
     }
     _getLogInfo(type, infos){
-        let time = this._showTimeStamp ? _dateFormat(new Date()) : '';
+        let time = this._showTimeStamp ? _formatTime(new Date()) : '';
         let info = `${time} [${type}] ${this._tag} ${infos.join(' ')}`;
         return info;
     }
@@ -53,10 +54,12 @@ class Log{
         console.log(info);
         this._config.saveLevel <= LogLevel.ERROR && this._logList.push(info);
     }
+    getLogList(){return this._logList;}
+    getLogInfoObject(){return {tag: this._config.TAG, list: this._logList};}
+    getLogInfoString(){return JSON.stringify(this.getLogInfoObject());}
 }
 
 module.exports = {
     create,
     Log
 };
-
