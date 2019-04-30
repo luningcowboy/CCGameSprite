@@ -1,64 +1,67 @@
-let log = {};
-// 日志配置
-let _config = {
-    level: 1, // 日志等级 1 debug 2 warn 3 error
-    showTimeStamp: true, // 是否显示时间戳
-    isReport: false, // 是否上报错误日志
-    reportURL: '', // 上报日志地址
-    isSaveToLocal: false, // 是否在本地保存日志
-    localTag: '', // 本地日志tag 日志在本地保存的时候是 `tag_date.log`
-    maxLogInCache: 200, // 最大日志缓存条数
+/* 日志模块
+ * 不是单例日志，需要在用到到地方实例化
+ * 也就是说会存在很多log实例，但是，这种模式便于，日志的分类和特殊处理
+ */
+let _formatTime = (date)=>{
+    date = date || new Date();
+    let strDate = date.getFullYear()+"-";
+    strDate += date.getMonth()+1+"-";
+    strDate += date.getDate()+"-";
+    strDate += date.getHours()+":";
+    strDate += date.getMinutes()+":";
+    strDate += date.getSeconds();
+    strDate += ' ' + date.getMilliseconds();
+    return strDate ;  
 };
-let _cache = []; // 日志缓存数组
-
-// 添加日志到缓存
-let _addLog2Cache = (type, time, tag, infos)=>{
-    let log_info = {
-        type: type,
-        tag: tag,
-        infos: infos
-    };
-    _cache.push(log_info);
-    if(_cache.length >= _config.maxLogInCache){
-        _config.isSaveToLocal && _saveLog2Local();
-        _config.isReport && _reportLog2Server();
-        _cache = [];
+let _defaultConfig = {
+    TAG: 'LOG',
+    timeStamp: true,
+    saveLevel: 2, // 0 debug, 1 warn, 2 error
+    logLevel: 0,
+};
+let LogLevel = {
+    DEBUG: 0,
+    WARN: 1,
+    ERROR: 2
+};
+let _defaultLogLevel = LogLevel.DEBUG;
+let create = ({TAG = 'LOG', timeStamp== true, saveLevel = 2, logLevel = 0})=>{
+    let ret = new Log({TAG: TAG, timeStamp: timeStamp, saveLevel: saveLevel, logLevel: logLevel});
+    return ret;
+};
+class Log{
+    constructor(config){
+        this._config = config;
+        this._logList = [];
     }
+    _getLogInfo(type, infos){
+        let time = this._showTimeStamp ? _dateFormat(new Date()) : '';
+        let info = `${time} [${type}] ${this._tag} ${infos.join(' ')}`;
+        return info;
+    }
+    debug(...infos){
+        if(this._config.logLevel > LogLevel.DEBUG) return;
+
+        let info = this._getLogInfo('DEUBG', infos);
+        console.log(info);
+        this._config.saveLevel <= LogLevel.DEBUG && this._logList.push(info);
+    }
+    warn(...infos){
+        if(this._config.logLevel > LogLevel.WARN) return;
+
+        let info = this._getLogInfo('WARN', infos);
+        console.log(info);
+        this._config.saveLevel <= LogLevel.WARN && this._logList.push(info);
+    }
+    error(...infos){
+        let info = this._getLogInfo('ERROR', infos);
+        console.log(info);
+        this._config.saveLevel <= LogLevel.ERROR && this._logList.push(info);
+    }
+}
+
+module.exports = {
+    create,
+    Log
 };
 
-// 保存日志到本地
-// TODO: 本地保存模块
-let _saveLog2Local = ()=>{
-
-};
-
-// 上传日志到服务器
-// TODO: 上传日志模块
-let _reportLog2Server = ()=>{
-
-};
-
-// 设置日志配置
-log.setConfig = (config)=>{
-    if(config) _config = config;
-};
-
-
-log.debug = (tag, infos)=>{
-    let time = GS.Date.timeStamp();
-    console.log('GSLOG [DEBUG] ', _config.showTimeStamp ? time : '' , tag, infos);
-    _addLog2Cache("debug", time ,tag, infos);
-};
-log.warn = (tag, infos)=>{
-    let time = GS.Date.timeStamp();
-    console.log('GSLOG [WARN] ', _config.showTimeStamp ? time : '', tag, infos);
-    _addLog2Cache("warn", time ,tag, infos);
-};
-log.error = (tag, infos)=>{
-    let time = GS.Date.timeStamp();
-    console.log('GSLOG [ERROR] ', _config.showTimeStamp ? time : '', tag, infos);
-    _addLog2Cache("error", time ,tag, infos);
-};
-
-
-module.exports = log;
