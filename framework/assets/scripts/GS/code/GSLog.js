@@ -13,19 +13,14 @@ let _formatTime = (date)=>{
     strDate += ' ' + date.getMilliseconds();
     return strDate ;  
 };
-let _defaultConfig = {
-    TAG: 'LOG',
-    timeStamp: true,
-    saveLevel: 2, // 0 debug, 1 warn, 2 error
-    logLevel: 0,
-};
+
 let LogLevel = {
     DEBUG: 0,
     WARN: 1,
     ERROR: 2
 };
-let _defaultLogLevel = LogLevel.DEBUG;
-let create = ({TAG = 'LOG', timeStamp== true, saveLevel = 2, logLevel = 0})=>{
+
+let create = ({TAG = 'LOG', timeStamp= true, saveLevel = 2, logLevel = 0})=>{
     let ret = new Log({TAG: TAG, timeStamp: timeStamp, saveLevel: saveLevel, logLevel: logLevel});
     return ret;
 };
