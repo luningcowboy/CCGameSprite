@@ -14,5 +14,6 @@ GS.Extersion = require('./code/GSExtension.js');
 GS.LZString = require('./third/lz-string.js');
 GS.FSM = require('./third/state-machine.min.js');
 GS._ = require('./third/lodash-min.js');
+GS.poao = require('./third/pako.min.js');
 
 cc.log('load GS end');
